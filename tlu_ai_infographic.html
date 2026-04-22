@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TLÜ AI Kasutamine — Uurimistulemused</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f5f2ec;
+    --accent: #c8392b;
+    --accent2: #2563a8;
+    --accent3: #1a7a4a;
+    --mid: #6b6560;
+    --rule: #d4cfc8;
+    --yellow: #e8c84a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 48px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 24px 0 20px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 20px;
+  }
+
+  .masthead-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+
+  .masthead h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .masthead h1 span {
+    color: var(--accent);
+  }
+
+  .masthead-meta {
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 1.8;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 2px solid var(--ink);
+    margin-bottom: 40px;
+  }
+
+  .stat-cell {
+    padding: 20px 18px;
+    border-right: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .stat-cell:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--mid);
+    letter-spacing: 0.1em;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .card {
+    background: white;
+    padding: 28px;
+    position: relative;
+  }
+
+  .card-accent-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+  }
+
+  .card.red .card-accent-bar { background: var(--accent); }
+  .card.blue .card-accent-bar { background: var(--accent2); }
+  .card.green .card-accent-bar { background: var(--accent3); }
+  .card.yellow .card-accent-bar { background: var(--yellow); }
+
+  .card-content { padding-left: 16px; }
+
+  .card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 10px;
+  }
+
+  .card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #2a2826;
+    margin-bottom: 10px;
+  }
+
+  .quote-block {
+    border-left: 2px solid var(--rule);
+    padding: 8px 12px;
+    margin: 12px 0;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.55;
+    background: #faf9f6;
+  }
+
+  .conclusion-tag {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-top: 12px;
+  }
+
+  .conclusion-text {
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* PATTERN SPECTRUM */
+  .spectrum-card {
+    background: white;
+    padding: 28px;
+    margin-bottom: 2px;
+    grid-column: span 2;
+  }
+
+  .spectrum-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .spectrum-item {
+    text-align: center;
+  }
+
+  .spectrum-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+  }
+
+  .spectrum-dot.d1 { background: var(--accent); }
+  .spectrum-dot.d2 { background: #d4562b; }
+  .spectrum-dot.d3 { background: #b07030; }
+  .spectrum-dot.d4 { background: var(--accent2); }
+  .spectrum-dot.d5 { background: var(--accent3); }
+
+  .spectrum-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+    line-height: 1.4;
+  }
+
+  /* RECOMMENDATIONS */
+  .recs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .rec-card {
+    background: white;
+    padding: 24px;
+  }
+
+  .rec-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .rec-who {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rec-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 9px;
+    align-items: flex-start;
+  }
+
+  .rec-bullet {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .rec-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #2a2826;
+  }
+
+  /* FOOTER */
+  .footer-bar {
+    border-top: 2px solid var(--ink);
+    padding-top: 16px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--mid);
+    letter-spacing: 0.08em;
+  }
+
+  /* PARADOX BOX */
+  .paradox-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 20px 22px;
+    margin-top: 14px;
+    position: relative;
+  }
+
+  .paradox-box::before {
+    content: '!';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--accent);
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .paradox-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a09a94;
+    margin-bottom: 6px;
+  }
+
+  .paradox-text {
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  /* FULL WIDTH CARD */
+  .full-width {
+    grid-column: span 2;
+    background: white;
+    padding: 28px;
+    margin-bottom: 2px;
+  }
+
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .strategy-item {
+    border: 1px solid var(--rule);
+    padding: 14px;
+  }
+
+  .strategy-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .strategy-desc {
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--mid);
+  }
+
+  .strategy-quote {
+    font-style: italic;
+    font-size: 11px;
+    color: #888;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 700px) {
+    .main-grid, .recs-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .full-width { grid-column: span 1; }
+    .spectrum-row { grid-template-columns: repeat(3, 1fr); }
+    .strategy-grid { grid-template-columns: 1fr; }
+    .masthead { grid-template-columns: 1fr; }
+    .masthead-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div>
+    <div class="masthead-label">Kvalitatiivne intervjuu-uuring · TLÜ · 2025</div>
+    <h1>Tehisintellekt<br>õppetöös — <span>mida</span><br><span>tudengid räägivad</span></h1>
+  </div>
+  <div class="masthead-meta">
+    Intervjuusid kokku: ~38<br>
+    Analüüsimeetod: kvalitatiivne<br>
+    Kodeerimine: teemaanalüüs<br>
+    Fookus: institutsionaalne<br>raamistik · TLÜ kontekst
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-num">~38</div>
+    <div class="stat-label">Intervjueeritud<br>üliõpilast</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">4</div>
+    <div class="stat-label">Peamist<br>analüüsiteemat</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">0</div>
+    <div class="stat-label">Identset<br>tõlgendust reeglitest</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Soovituste<br>sihtrühma</div>
+  </div>
+</div>
+
+<!-- MAIN FINDINGS GRID -->
+<div class="main-grid">
+
+  <!-- 4.1 -->
+  <div class="card red">
+    <div class="card-accent-bar"></div>
+    <div class="card-content">
+      <div class="card-label">Leid 4.1</div>
+      <h3>Poliitika nähtamatus ja tõlgenduste killustatus</h3>
+      <p>TLÜ tehisintellekti poliitika eksisteerib formaalselt, kuid ei toimi ühtse normatiivse orientiirına. Ükski intervjueeritud üliõpilastest ei väljendanud identset arusaama kehtivatest reeglitest.</p>
+      <div class="quote-block">„Nii palju kui õppejõud räägivad, nii palju tean."</div>
+      <div class="quote-block">„Kui reeglid ei ole selged, tekib tunne, et äkki ma teen midagi valesti."</div>
+      <div class="conclusion-tag">Järeldus</div>
+      <div class="conclusion-text">Kommunikatsiooni killustatus → vajadus süsteemselt edastatava poliitika järele</div>
+    </div>
+  </div>
+
+  <!-- 4.2 -->
+  <div class="card blue">
+    <div class="card-accent-bar"></div>
+    <div class="card-content">
+      <div class="card-label">Leid 4.2</div>
+      <h3>Õppejõud — ainus kanal ja ebajärjekindluse allikas</h3>
+      <p>Praktiliselt kõik intervjueeritud kirjeldasid õppejõudu kui ainsat kanalit, mille kaudu institutsionaalne info nendeni jõuab — kuid see kanal on ühtlasi ebajärjekindluse peamine allikas.</p>
+      <div class="quote-block">„Mõni tahab, et viidatakse, mõni ei taha, mõni üldse ei luba kasutada."</div>
+      <div class="paradox-box">
+        <div class="paradox-title">Läbipaistvuse paradoks</div>
+        <div class="paradox-text">Aus ülestunnistus AI kasutamise kohta võib tuua kaasa karistuse — see loob stiimuli kasutust varjata.</div>
+      </div>
+      <div class="conclusion-tag">Järeldus</div>
+      <div class="conclusion-text">Õppejõu AI-pädevus on pedagoogilise hoiaku prediktor</div>
+    </div>
+  </div>
+
+  <!-- 4.3 FULL WIDTH -->
+  <div class="full-width">
+    <div class="section-header">
+      <span class="section-num">4.3</span>
+      <span class="section-title">Üliõpilaste kohanemisstrateegiad normatiivse vaakumi tingimustes</span>
+    </div>
+    <p style="font-size:13px; color: var(--mid); margin-bottom: 4px;">Institutsionaalse selguse puudumisel on üliõpilased kujundanud mitmesuguseid isiklikke strateegiaid — need peegeldavad kohanemist vaakumiga, mitte pedagoogilise eesmärgi saavutamist.</p>
+    <div class="strategy-grid">
+      <div class="strategy-item">
+        <div class="strategy-name">① Ainepõhine selektiivsus</div>
+        <div class="strategy-desc">AI kasutus sõltub sellest, mida konkreetne õppejõud lubab — mitte sellest, mis oleks õppimisel kasulik. Keelud nihutavad käitumist, ei muuda seda.</div>
+        <div class="strategy-quote">„Ega kui õppejõud ei poolda, siis see ei tähenda, et ma ei kasutaks."</div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-name">② Kognitiivne suveräänsus</div>
+        <div class="strategy-desc">Teadlik valik piirata AI kasutust iseseisva mõtlemise säilitamiseks. Intuitiivne arusaam ankurdamisefektist — AI varajane kaasamine kallutab mõtlemise suunda.</div>
+        <div class="strategy-quote">„Kui ma kõigepealt enda mõtteid läbi ei mõtle, siis pärast on mu mõtted kallutatud."</div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-name">③ Instrumentaalne pragmatism</div>
+        <div class="strategy-desc">AI kasutus ilma sügavama refleksioonita — kuni puudub väline stiimul käitumise muutmiseks. Käitumine muutuks ainult siis, kui tekib tugevam sisemine motivatsioon.</div>
+        <div class="strategy-quote">„Ei ole midagi, mis peataks mind... AI täidab oma rolli päris hästi."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.4 -->
+  <div class="card green">
+    <div class="card-accent-bar"></div>
+    <div class="card-content">
+      <div class="card-label">Leid 4.4</div>
+      <h3>Institutsionaalsed ootused ja nende seos probleemidega</h3>
+      <p>Üliõpilaste soovitused jaotusid kolmeks — vastavalt kogetud probleemidele:</p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin: 12px 0;">
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:12px;">
+          <span style="color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:10px; margin-top:2px; flex-shrink:0;">01</span>
+          <span><strong>Selgemad reeglid</strong> — vastus kogetud killustatusele. „See tekitab stressi ka juurde."</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:12px;">
+          <span style="color:var(--accent2); font-family:'IBM Plex Mono',monospace; font-size:10px; margin-top:2px; flex-shrink:0;">02</span>
+          <span><strong>Praktiline AI-õpetus</strong> — promptimine, töövahendite valik, kriitiline hindamine</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:12px;">
+          <span style="color:var(--accent3); font-family:'IBM Plex Mono',monospace; font-size:10px; margin-top:2px; flex-shrink:0;">03</span>
+          <span><strong>Õppejõudude pädevus</strong> — „muutus peab algama õppejõududest"</span>
+        </div>
+      </div>
+      <div class="conclusion-tag">Kontrapunkt</div>
+      <div class="conclusion-text" style="margin-top:6px;">Kaks üliõpilast: „reeglid ei aita alati" — osa üliõpilastest eelistab autonoomiat</div>
+    </div>
+  </div>
+
+  <!-- AI DETECTORS -->
+  <div class="card yellow">
+    <div class="card-accent-bar"></div>
+    <div class="card-content">
+      <div class="card-label">Lisaleid</div>
+      <h3>AI detektorite valepositiivsed — uus ärevusallikas</h3>
+      <p>Üks üliõpilane tõstatas probleemi, mida teised ei maininud: AI detektorid klassifitseerivad ka ausalt kirjutatud tekstid AI-genereerituks.</p>
+      <div class="quote-block">„AI detektorid tänapäeval määravad kõike kui AI genereeritud, isegi kui sa ise kirjutasid — lähitulevikus oleme sunnitud salvestama enda tööprotsessi videole."</div>
+      <p style="font-size:12px; color:var(--mid); margin-top: 10px;">Institutsionaalne vastus tehisintellektile tekitab omakorda uusi ärevusallikaid ka ausate üliõpilaste jaoks. Detektorite usaldusväärsus vajab hindamist enne laialdast kasutuselevõttu.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- SEPARATOR -->
+<div style="height:24px;"></div>
+<div style="border-top: 3px solid var(--ink); padding-top: 8px; margin-bottom: 24px;">
+  <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:22px; letter-spacing:-0.01em;">Soovitused kolmele sihtrühmale</div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="recs-grid">
+  <div class="rec-card" style="border-top: 3px solid var(--accent);">
+    <div class="rec-icon">🏛</div>
+    <div class="rec-who">Ülikoolile</div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Ühtne, lihtsasti leitav AI juhend</strong> — lingitud ÕIS-is iga kursuse juures</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Ühtne viitamisstandard</strong> — kohustuslik deklaratsioon kõigis ainetes</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>AI baasmoodul</strong> esimese aasta õppekavas — kõigile kohustuslik</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Valideeritud töövahendite nimekiri</strong> akadeemiliseks kasutuseks</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>AI detektorite praktika ülevaatus</strong> enne laialdast kasutust</span>
+    </div>
+  </div>
+
+  <div class="rec-card" style="border-top: 3px solid var(--accent2);">
+    <div class="rec-icon">👨‍🏫</div>
+    <div class="rec-who">Õppejõududele</div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>AI tingimused kirjalikult</strong> iga kursuse alguses — mitte ainult suuliselt</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Põhjendada piiranguid pedagoogiliselt</strong> — miks, mitte ainult keeld</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Arendada isiklikku AI-pädevust</strong> — praktilised erialaspetsiifilised koolitused</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Mitte karistada läbipaistvust</strong> — aus ülestunnistus peab olema positiivne</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Integreerida AI ülesannetesse</strong> — abivahendina, mitte asendajana</span>
+    </div>
+  </div>
+
+  <div class="rec-card" style="border-top: 3px solid var(--accent3);">
+    <div class="rec-icon">🎓</div>
+    <div class="rec-who">Üliõpilastele</div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Tutvuda kehtivate reeglitega</strong> — TLÜ koduleht + kursuse materjalid</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Kujundada isiklik põhimõte</strong> — kõigepealt iseseisev mõttetöö, siis AI</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Viidata alati</strong> — ka siis, kui nõuet pole. Läbipaistvus loob usaldust</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>Arendada kriitilist suhtumist</strong> — kontrollida AI vastuseid teistest allikatest</span>
+    </div>
+    <div class="rec-item">
+      <span class="rec-bullet">→</span>
+      <span class="rec-text"><strong>AI = mõtlemise käivitaja</strong>, mitte asendaja — vältida ankurdamisefekti</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-bar">
+  <div class="footer-text">TLÜ ELU projekt · Grupp 4 · Institutsionaalne raamistik</div>
+  <div class="footer-text">Kvalitatiivne intervjuude analüüs · 2025</div>
+</div>
+
+</body>
+</html>
